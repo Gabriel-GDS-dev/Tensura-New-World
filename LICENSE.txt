@@ -1,0 +1,12 @@
+Copyright (c) 2026 Gabriel
+
+All Rights Reserved.
+
+This source code and the original Tensura - New World assets may not be
+redistributed, sublicensed, sold, or published without the copyright holder's
+written permission.
+
+Minecraft, Tensura: Reincarnated, That Time I Got Reincarnated as a Slime,
+and all third-party libraries and assets remain the property of their
+respective owners. This fan project does not grant rights to third-party
+intellectual property.

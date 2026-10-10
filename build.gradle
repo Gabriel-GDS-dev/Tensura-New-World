@@ -26,8 +26,30 @@ sourceSets.main.resources {
     exclude("src/generated/**/.cache") // datagen cache files
 }
 
+def resourceRunSuffix = project.hasProperty('tnwResourceRun') ? "-${project.property('tnwResourceRun')}" : ''
+sourceSets.main.output.resourcesDir = file("build/resources-${mod_version}${resourceRunSuffix}/main")
+
+// Isolated real-server regression tests; never packaged in the distributed core.
+if (project.hasProperty('tnwGameTests')) {
+    sourceSets {
+        gametest {
+            compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+            runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+        }
+    }
+}
+
+def testCompileRunId = System.currentTimeMillis()
+// Avoid the same OneDrive/IDE locks for copied test resources as for test classes.
+sourceSets.test.output.resourcesDir = file("build/resources/test-${testCompileRunId}")
+tasks.named('compileTestJava', JavaCompile).configure {
+    destinationDirectory = layout.buildDirectory.dir("classes/java/test-${testCompileRunId}")
+}
+sourceSets.test.output.classesDirs.setFrom(
+        tasks.named('compileTestJava', JavaCompile).flatMap { it.destinationDirectory })
+
 repositories {
-    // Add here additional repositories if required by some of the dependencies below.
+    mavenCentral()
 }
 
 base {
@@ -54,6 +76,15 @@ neoForge {
     runs {
         client {
             client()
+            if (project.hasProperty('tnwClientIsolationSmoke')) {
+                gameDirectory = project.file('build/world-isolation-client')
+                systemProperty 'tnw.clientIsolationSmoke', 'true'
+            }
+            if (project.hasProperty('tnwUiSmoke')) {
+                gameDirectory = project.file('build/rpg-ui-client')
+                systemProperty 'tnw.uiSmoke', 'true'
+                programArguments.addAll '--width', '1280', '--height', '720'
+            }
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
@@ -70,6 +101,8 @@ neoForge {
         gameTestServer {
             type = "gameTestServer"
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            gameDirectory = project.file(project.hasProperty('morphTestJar') ? 'build/body-gametest-morph' : 'build/body-gametest-nw')
+            logLevel = org.slf4j.event.Level.INFO
         }
 
         data {
@@ -103,6 +136,7 @@ neoForge {
         // multi mod projects should define one per mod
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            if (project.hasProperty('tnwGameTests')) sourceSet(sourceSets.gametest)
         }
     }
 }
@@ -115,7 +149,18 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+def nativeCompileDir = layout.buildDirectory.dir('nativeCompile')
+def extractNativeCompile = tasks.register('extractNativeCompile', Copy) {
+    from(zipTree('libs/manascore-neoforge-4.0.0.2.jar'))
+    include '**/*.jar'
+    eachFile { path = name }
+    includeEmptyDirs = false
+    into nativeCompileDir
+}
+
 dependencies {
+    compileOnly files('libs/tensura-neoforge-2.0.1.3.jar', 'libs/architectury-13.0.11-neoforge.jar')
+    compileOnly files(provider { fileTree(nativeCompileDir.get().asFile) { include '*.jar' } }).builtBy(extractNativeCompile)
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
@@ -131,6 +176,16 @@ dependencies {
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 
+    // The upstream mod and its runtime libraries remain external and are never
+    // repackaged into the core jar. Local runtime makes runClient/runServer
+    // reproduce the actual modpack while keeping compile-time coupling at zero.
+    localRuntime fileTree(dir: 'libs', include: ['*.jar'])
+    if (project.hasProperty('morphTestJar')) localRuntime files(project.property('morphTestJar'))
+
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
 
@@ -141,7 +196,7 @@ dependencies {
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
-var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+var generateModMetadata = tasks.register("generateModMetadata${resourceRunSuffix}", ProcessResources) {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
@@ -155,7 +210,9 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
     inputs.properties replaceProperties
     expand replaceProperties
     from "src/main/templates"
-    into "build/generated/sources/modMetadata"
+    // Keep generated metadata out of the IDE-watched source tree. OneDrive and
+    // the Java language server can otherwise retain this directory on Windows.
+    into "build/modMetadata/${mod_version}${resourceRunSuffix}"
 }
 // Include the output of "generateModMetadata" as an input directory for the build
 // this works with both building through Gradle and the IDE.
@@ -179,6 +236,19 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.release = 21
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    sourceSets.test.compileClasspath += sourceSets.main.compileClasspath
+    sourceSets.test.runtimeClasspath += sourceSets.main.runtimeClasspath
+    // OneDrive and the VS Code Java server can briefly retain Gradle's binary results on Windows.
+    def runId = System.currentTimeMillis()
+    binaryResultsDirectory = layout.buildDirectory.dir("test-results/${name}/binary-${runId}")
+    reports.html.outputLocation = layout.buildDirectory.dir("reports/tests/${name}-${runId}")
+    reports.junitXml.outputLocation = layout.buildDirectory.dir("test-results/${name}/xml-${runId}")
+    outputs.cacheIf { false }
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.

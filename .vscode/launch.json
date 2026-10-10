@@ -1,0 +1,93 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - tensura-new-world-core",
+        "order": 0
+      },
+      "projectName": "tensura-new-world-core",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+      ],
+      "cwd": "${workspaceFolder}\\build\\rpg-ui-client",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - tensura-new-world-core",
+        "order": 1
+      },
+      "projectName": "tensura-new-world-core",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - tensura-new-world-core",
+        "order": 2
+      },
+      "projectName": "tensura-new-world-core",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+      ],
+      "cwd": "${workspaceFolder}\\build\\body-gametest-morph",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - tensura-new-world-core",
+        "order": 3
+      },
+      "projectName": "tensura-new-world-core",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}
