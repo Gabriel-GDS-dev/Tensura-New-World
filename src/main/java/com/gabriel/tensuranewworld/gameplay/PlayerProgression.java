@@ -28,11 +28,14 @@ public final class PlayerProgression {
     public static void tick(ServerPlayer player) {
         TensuraPlayerData data = player.getData(ModAttachments.PLAYER_DATA);
         HarvestFestivalManager.tick(player, data);
+        if (player.tickCount % 5 == 0) com.gabriel.tensuranewworld.gameplay.TargetInspection.sync(player);
         if (player.tickCount % 20 != 0) {
             BodyPhysiology.tick(player, data);
             return;
         }
         ReincarnatedBridge.syncFromBase(player, data);
+        com.gabriel.tensuranewworld.integration.MorphAccess.enforce(player);
+        if (!com.gabriel.tensuranewworld.integration.MorphAccess.allowed(player)) data.clearMimicForm();
         applyCharacterStats(player, data);
         BodyPhysiology.tick(player, data);
         evaluateWorldConditions(player, data);

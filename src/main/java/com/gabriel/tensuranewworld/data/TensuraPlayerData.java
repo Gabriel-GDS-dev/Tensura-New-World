@@ -274,7 +274,11 @@ public final class TensuraPlayerData {
     }
 
     public boolean selectMimicForm(String entityId) {
-        if (!RaceRegistry.isSlime(raceId) || entityId.isBlank() || !mimicForms.containsKey(entityId)) {
+        return selectMimicForm(entityId, com.gabriel.tensuranewworld.integration.MorphAccess.allowed(raceId, skills));
+    }
+
+    public boolean selectMimicForm(String entityId, boolean authorized) {
+        if (!authorized || entityId.isBlank() || !mimicForms.containsKey(entityId)) {
             return false;
         }
         activeMimicForm = entityId;

@@ -47,17 +47,15 @@ public final class ReincarnatedBridge {
             data.setReceivedName(true);
         }
         raceId(entity).ifPresent(baseRace -> {
-            if (data.getEvolutionStage().isBlank()) {
+            // The native race is authoritative, including selection after login,
+            // commands and native evolutions. Never write a stale local default back.
+            if (!baseRace.equals(data.getRaceId())) {
                 data.setRaceId(baseRace);
                 data.setEvolutionStage(EvolutionRegistry.inferStage(baseRace));
-            } else if (baseRace.equals("tensura:god_slime") && data.isTrueDemonLord()) {
-                // Accept the native forward milestone instead of reverting it to Demon Slime.
-                data.setRaceId(baseRace);
-                data.setEvolutionStage("ultimate_slime");
                 data.setPendingEvolution("");
-            } else if (!baseRace.equals(data.getRaceId())) {
-                // New World owns evolution after the initial lineage is selected.
-                writeRace(entity, data.getRaceId());
+            } else if (data.getEvolutionStage().isBlank()) {
+                // Preserve local milestones (e.g. Named Slime) for an unchanged race.
+                data.setEvolutionStage(EvolutionRegistry.inferStage(baseRace));
             }
         });
         skillIds(entity).forEach(data.getSkills()::add);

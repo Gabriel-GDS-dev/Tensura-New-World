@@ -278,6 +278,11 @@ public final class RaphaelScreen extends Screen {
 
     private void renderForms(GuiGraphics graphics, int x, int y, int contentWidth, TensuraPlayerData data) {
         if (ModList.get().isLoaded("morph")) {
+            if (!ClientPlayerState.morphAllowed()) {
+                drawReadable(graphics, "MORPH BLOQUEADO // exclusivo da linhagem Slime", x, y, 0xFFE3C58B);
+                drawReadable(graphics, "Outras racas precisam adquirir Gula ou sua evolucao.", x, y + 18, 0xFFFFFFFF);
+                return;
+            }
             drawReadable(graphics, "MORPH // TRANSFORMACAO ANIMADA ATIVA", x, y, 0xFFE3C58B);
             drawReadable(graphics, "Use [ ou ] para abrir a selecao do Morph.", x, y + 18, 0xFFFFFFFF);
             drawReadable(graphics, "Enter/clique transforma; Esc fecha a selecao.", x, y + 36, 0xFFE7DECE);
@@ -308,7 +313,7 @@ public final class RaphaelScreen extends Screen {
             }
             return;
         }
-        if (!RaceRegistry.isSlime(data.getRaceId())) {
+        if (!ClientPlayerState.morphAllowed()) {
             drawReadable(graphics, "Mimetizacao New World disponivel para linhagens Slime.", x, y, 0xFFFFFFFF);
             drawReadable(graphics, "Derrote criaturas com Predator para registrar formas.", x, y + 18, 0xFFE7DECE);
             return;

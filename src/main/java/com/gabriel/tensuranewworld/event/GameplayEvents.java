@@ -104,8 +104,7 @@ public final class GameplayEvents {
             MonsterSkillAbsorption.absorb(player, defeated, data);
         }
 
-        if (event.getEntity() instanceof Mob mob && (net.neoforged.fml.ModList.get().isLoaded("morph")
-                || RaceRegistry.isSlime(data.getRaceId()) && data.getSkills().stream().anyMatch(GameplayEvents::isPredatorSkill))) {
+        if (event.getEntity() instanceof Mob mob && com.gabriel.tensuranewworld.integration.MorphAccess.allowed(player)) {
             String entityId = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString();
             data.recordMimicDefeat(new MimicForm(
                     entityId,

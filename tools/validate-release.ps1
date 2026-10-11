@@ -1,12 +1,14 @@
 param(
-    [string]$PackPath
+    [string]$PackPath,
+    [string]$PackVersion
 )
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $version = (Select-String -LiteralPath (Join-Path $root 'gradle.properties') -Pattern '^mod_version=(.+)$').Matches[0].Groups[1].Value
+if (-not $PackVersion) { $PackVersion = "$version-full.1" }
 if ([string]::IsNullOrWhiteSpace($PackPath)) {
-    $PackPath = Join-Path $root "dist\Tensura-New-World-$version.mrpack"
+    $PackPath = Join-Path $root "dist\Tensura-New-World-$PackVersion.mrpack"
 }
 if (-not (Test-Path -LiteralPath $PackPath)) {
     throw "Pack not found: $PackPath"
@@ -78,20 +80,34 @@ try {
 
     Assert-Release ($index.formatVersion -eq 1) "unsupported formatVersion"
     Assert-Release ($index.game -eq "minecraft") "game must be minecraft"
-    Assert-Release ($index.versionId -eq $version) "versionId must be $version"
+    Assert-Release ($index.versionId -eq $PackVersion) "versionId must be $PackVersion"
     Assert-Release ($index.dependencies.minecraft -eq "1.21.1") "Minecraft must be 1.21.1"
     Assert-Release ($index.dependencies.neoforge -eq "21.1.252") "NeoForge must be 21.1.252"
-    Assert-Release (@($index.files).Count -eq $expectedDownloads.Count) "dependency count must be 6"
+    $extraFiles = @(Get-Content -LiteralPath (Join-Path $PSScriptRoot 'modrinth-extra-files.json') -Raw | ConvertFrom-Json | ForEach-Object { $_ })
+    $expectedDownloads += @($extraFiles | ForEach-Object { Split-Path -Leaf $_.path })
+    Assert-Release (@($index.files).Count -eq $expectedDownloads.Count) "incorrect dependency count"
 
     foreach ($file in @($index.files)) {
         $name = Split-Path -Leaf $file.path
         Assert-Release ($expectedDownloads -contains $name) "unexpected dependency $name"
-        Assert-Release ($file.path -eq "mods/$name") "invalid dependency path for $name"
+        $expectedPath = if ($name.EndsWith('.zip')) { "shaderpacks/$name" } else { "mods/$name" }
+        Assert-Release ($file.path -eq $expectedPath) "invalid dependency path for $name"
+        $expectedServer = if ($name.EndsWith('.zip') -or $name -match '^(iris-|sodium-)') { 'unsupported' } else { 'required' }
+        Assert-Release ($file.env.client -eq 'required' -and $file.env.server -eq $expectedServer) "invalid environment for $name"
         Assert-Release (-not [string]::IsNullOrWhiteSpace($file.hashes.sha1)) "missing SHA-1 for $name"
         Assert-Release (-not [string]::IsNullOrWhiteSpace($file.hashes.sha512)) "missing SHA-512 for $name"
         Assert-Release (@($file.downloads).Count -eq 1) "exactly one download is required for $name"
         Assert-Release ($file.downloads[0].StartsWith("https://cdn.modrinth.com/")) "non-Modrinth download for $name"
     }
+    foreach ($expected in $extraFiles) {
+        $actual = @($index.files | Where-Object { $_.path -eq $expected.path })
+        Assert-Release ($actual.Count -eq 1) "missing or duplicate extra content $($expected.path)"
+        Assert-Release ($actual[0].hashes.sha1 -eq $expected.hashes.sha1 -and $actual[0].hashes.sha512 -eq $expected.hashes.sha512 -and $actual[0].downloads[0] -eq $expected.downloads[0] -and $actual[0].fileSize -eq $expected.fileSize) "extra content differs from pinned Modrinth file $($expected.path)"
+    }
+    $irisConfig = $pack.GetEntry('client-overrides/config/iris.properties')
+    Assert-Release ($null -ne $irisConfig) 'default shader config missing'
+    $irisText = Read-ZipText $irisConfig
+    Assert-Release ($irisText -match '(?m)^enableShaders=true\s*$' -and $irisText -match '(?m)^shaderPack=ComplementaryUnbound_r5.9.3.zip\s*$') 'Complementary must be enabled by default'
 
     $coreEntries = @($pack.Entries | Where-Object {
         $_.FullName -like "overrides/mods/tensuranewworld-*.jar"

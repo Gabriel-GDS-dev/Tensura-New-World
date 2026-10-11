@@ -28,7 +28,7 @@ final class MenuGuide {
                 "Uma forma do Morph não substitui uma evolução de raça. Para habilidades específicas da espécie, consulte Habilidades e COMO DESBLOQUEAR. Se não houver rota registrada, a aba informa o ápice conhecido pelo New World.");
             case "FORMS" -> List.of("FORMAS / CORPO E RAÇA",
                 "Com Morph instalado, esta aba informa os controles e atributos do corpo. Abra o seletor usando as teclas indicadas na aba; confirme a forma no Morph. As teclas podem ser alteradas em Opções > Controles.",
-                "Sem Morph, a mimetização New World exige linhagem Slime: derrote criaturas com Predator, escolha uma forma registrada e clique ASSUMIR. ABANDONAR retorna ao corpo original.",
+                "Morph e mimetização são exclusivos da linhagem Slime. Outras raças precisam adquirir e aprender Gula ou uma evolução dela; Predator sozinho não permite transformar. A aquisição continua seguindo os requisitos difíceis do Reincarnated. Se perder a permissão, retorna ao corpo original.",
                 "LIMPAR NW limpa somente uma forma antiga do sistema New World; para sair de uma transformação do Morph, selecione a forma original no Morph.",
                 "Trocar o corpo altera atributos e necessidades físicas. A proporção da vida é preservada; transformar não cura automaticamente. Corpos que comem recuperam a alimentação anterior.",
                 "Voo depende do corpo e das regras do servidor. Formas aéreas elegíveis usam dois toques em Espaço para voar e Shift para descer. Terrestres não ganham voo. Transformação e aquisição de habilidades são sistemas distintos.");

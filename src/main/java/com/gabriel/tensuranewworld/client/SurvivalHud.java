@@ -16,7 +16,7 @@ final class SurvivalHud {
         var data = ClientPlayerState.get();
         var body = ClientPlayerState.body();
         boolean air = !body.breathesWater() && (player.isUnderWater() || player.getAirSupply() < player.getMaxAirSupply());
-        int width = Math.min(238, graphics.guiWidth() - 24);
+        int width = Math.min(238, (graphics.guiWidth() - 36) / 2);
         if (width < 120) return;
         int x = graphics.guiWidth() - width - 12, y = 12;
         int height = 98 + (body.needsFood() ? 18 : 0) + (air ? 18 : 0);
@@ -56,7 +56,7 @@ final class SurvivalHud {
         }
     }
 
-    private static void bar(GuiGraphics g, int x, int y, int width, double value, double maximum, String label, String amount, int color) {
+    static void bar(GuiGraphics g, int x, int y, int width, double value, double maximum, String label, String amount, int color) {
         text(g, label, x, y, width / 2, 0xFFD3D7DF);
         var font = Minecraft.getInstance().font;
         g.drawString(font, amount, x + width - font.width(amount), y, RpgTheme.TEXT, false);

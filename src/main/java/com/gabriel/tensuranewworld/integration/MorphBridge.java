@@ -35,7 +35,7 @@ public final class MorphBridge {
         return new State(entity, tag instanceof CompoundTag nbt ? nbt : new CompoundTag(), false, flight);
     }
 
-    private static Object field(Object target, String name) {
+    public static Object field(Object target, String name) {
         if (target == null) return null;
         try { Field field = target.getClass().getField(name); return field.get(target); }
         catch (ReflectiveOperationException | RuntimeException ignored) { return null; }

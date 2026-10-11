@@ -76,6 +76,11 @@ neoForge {
     runs {
         client {
             client()
+            if (project.hasProperty('tnwCombatHudSmoke')) {
+                gameDirectory = project.file('build/rpg-ui-client')
+                systemProperty 'tnw.combatHudSmoke', 'true'
+                programArguments.addAll '--width', '1280', '--height', '720'
+            }
             if (project.hasProperty('tnwClientIsolationSmoke')) {
                 gameDirectory = project.file('build/world-isolation-client')
                 systemProperty 'tnw.clientIsolationSmoke', 'true'

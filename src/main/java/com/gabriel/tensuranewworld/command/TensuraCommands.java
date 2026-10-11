@@ -153,7 +153,7 @@ public final class TensuraCommands {
         ServerPlayer player = context.getSource().getPlayerOrException();
         TensuraPlayerData data = data(player);
         String entityId = ResourceLocationArgument.getId(context, "entity_id").toString();
-        if (!data.selectMimicForm(entityId)) {
+        if (!data.selectMimicForm(entityId, com.gabriel.tensuranewworld.integration.MorphAccess.allowed(player))) {
             context.getSource().sendFailure(Component.literal("That form has not been absorbed."));
             return 0;
         }

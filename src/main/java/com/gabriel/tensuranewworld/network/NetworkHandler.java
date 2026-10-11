@@ -13,6 +13,10 @@ public final class NetworkHandler {
 
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
         var registrar = event.registrar("1");
+        registrar.playToClient(TargetVitalsPayload.TYPE, TargetVitalsPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> {
+                    if (FMLEnvironment.dist.isClient()) ClientPlayerState.acceptTarget(payload);
+                }));
         registrar.playToClient(WorldSessionPayload.TYPE, WorldSessionPayload.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> {
                     if (FMLEnvironment.dist.isClient()) com.gabriel.tensuranewworld.client.WorldBattleSelectionClient.accept(payload);
@@ -44,6 +48,7 @@ public final class NetworkHandler {
 
     public static void sync(ServerPlayer player, TensuraPlayerData data) {
         var tag = data.save();
+        tag.putBoolean("MorphAllowed", com.gabriel.tensuranewworld.integration.MorphAccess.allowed(player));
         tag.put(com.gabriel.tensuranewworld.data.BodyProfile.SNAPSHOT_KEY,
                 com.gabriel.tensuranewworld.gameplay.BodyPhysiology.profile(player, data).save());
         var skills = new net.minecraft.nbt.ListTag();

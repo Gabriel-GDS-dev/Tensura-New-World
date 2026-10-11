@@ -1,14 +1,16 @@
 param(
-    [switch]$SkipBuild
+    [switch]$SkipBuild,
+    [string]$PackVersion
 )
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $version = (Select-String -LiteralPath (Join-Path $root 'gradle.properties') -Pattern '^mod_version=(.+)$').Matches[0].Groups[1].Value
+if (-not $PackVersion) { $PackVersion = "$version-full.1" }
 $dist = Join-Path $root "dist"
 $stage = Join-Path $dist "pack-stage"
-$archive = Join-Path $dist "Tensura-New-World-$version.zip"
-$output = Join-Path $dist "Tensura-New-World-$version.mrpack"
+$archive = Join-Path $dist "Tensura-New-World-$PackVersion.zip"
+$output = Join-Path $dist "Tensura-New-World-$PackVersion.mrpack"
 
 if (-not $SkipBuild) {
     & (Join-Path $root "gradlew.bat") build --no-configuration-cache
@@ -55,6 +57,9 @@ $files = foreach ($mod in $mods) {
     }
 }
 
+$extraFiles = @(Get-Content -LiteralPath (Join-Path $PSScriptRoot 'modrinth-extra-files.json') -Raw | ConvertFrom-Json | ForEach-Object { $_ })
+$files = @($files) + $extraFiles
+
 foreach ($generatedPath in @($stage, $archive, $output)) {
     $absoluteGenerated = [System.IO.Path]::GetFullPath($generatedPath)
     $absoluteDist = [System.IO.Path]::GetFullPath($dist).TrimEnd('\') + '\'
@@ -69,18 +74,23 @@ New-Item -ItemType Directory -Path (Join-Path $stage "overrides\mods") -Force | 
 New-Item -ItemType Directory -Path (Join-Path $stage "overrides\config\tensura\client") -Force | Out-Null
 Copy-Item -LiteralPath $coreJar.FullName -Destination (Join-Path $stage "overrides\mods\$($coreJar.Name)")
 Copy-Item -LiteralPath (Join-Path $root "CREDITS.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_CREDITS.md")
-Copy-Item -LiteralPath (Join-Path $root "docs\GREAT_SAGE.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_GRANDE_SABIO.md")
+Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_FULL_PACK.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_GRANDE_SABIO.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\MORPH.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_MORPH.md")
+Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_FULL_PACK.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_PACOTE_COMPLETO.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.0.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.0.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\MENUS.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_MENUS.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.1.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.1.md")
+Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.2.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.2.md")
+Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.3.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.3.md")
 Copy-Item -LiteralPath (Join-Path $root "overrides\config\tensura\client\hud_config.toml") `
     -Destination (Join-Path $stage "overrides\config\tensura\client\hud_config.toml")
+New-Item -ItemType Directory -Path (Join-Path $stage 'client-overrides/config') -Force | Out-Null
+Copy-Item -LiteralPath (Join-Path $root 'overrides/config/iris.properties') -Destination (Join-Path $stage 'client-overrides/config/iris.properties')
 
 $index = [ordered]@{
     formatVersion = 1
     game = "minecraft"
-    versionId = $version
+    versionId = $PackVersion
     name = "Tensura - New World"
     summary = "Progressao Tensura unificada: EP e Essencia por abates, racas, atributos, mimetizacao Slime e evolucao no Raphael."
     files = @($files)
@@ -119,4 +129,4 @@ Move-Item -LiteralPath $archive -Destination $output
 Remove-Item -LiteralPath $stage -Recurse -Force
 
 Write-Host "Created $output"
-& (Join-Path $PSScriptRoot "validate-release.ps1") -PackPath $output
+& (Join-Path $PSScriptRoot "validate-release.ps1") -PackPath $output -PackVersion $PackVersion

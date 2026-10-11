@@ -8,6 +8,12 @@ import net.minecraft.nbt.CompoundTag;
 
 public final class ClientPlayerState {
     private static TensuraPlayerData snapshot = new TensuraPlayerData();
+    private static boolean morphAllowed;
+    private static com.gabriel.tensuranewworld.network.TargetVitalsPayload target;
+    private static long targetReceived;
+    public static boolean morphAllowed() { return morphAllowed; }
+    public static void acceptTarget(com.gabriel.tensuranewworld.network.TargetVitalsPayload value) { target = value; targetReceived = System.nanoTime(); }
+    public static com.gabriel.tensuranewworld.network.TargetVitalsPayload target() { return System.nanoTime() - targetReceived < 750_000_000L ? target : null; }
     private static com.gabriel.tensuranewworld.data.BodyProfile body;
     private static java.util.List<com.gabriel.tensuranewworld.data.SkillView> skills = java.util.List.of();
     private static final Map<UUID, String> mimicForms = new HashMap<>();
@@ -17,6 +23,7 @@ public final class ClientPlayerState {
 
     public static void accept(CompoundTag tag) {
         snapshot = TensuraPlayerData.load(tag.copy());
+        morphAllowed = tag.getBoolean("MorphAllowed");
         body = tag.contains(com.gabriel.tensuranewworld.data.BodyProfile.SNAPSHOT_KEY)
                 ? com.gabriel.tensuranewworld.data.BodyProfile.load(tag.getCompound(
                         com.gabriel.tensuranewworld.data.BodyProfile.SNAPSHOT_KEY)) : null;
@@ -33,6 +40,8 @@ public final class ClientPlayerState {
 
     public static void reset() {
         snapshot = new TensuraPlayerData();
+        morphAllowed = false;
+        target = null;
         skills = java.util.List.of();
         body = null;
         mimicForms.clear();
