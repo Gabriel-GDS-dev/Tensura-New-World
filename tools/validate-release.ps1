@@ -107,7 +107,8 @@ try {
     $irisConfig = $pack.GetEntry('client-overrides/config/iris.properties')
     Assert-Release ($null -ne $irisConfig) 'default shader config missing'
     $irisText = Read-ZipText $irisConfig
-    Assert-Release ($irisText -match '(?m)^enableShaders=true\s*$' -and $irisText -match '(?m)^shaderPack=ComplementaryUnbound_r5.9.3.zip\s*$') 'Complementary must be enabled by default'
+    Assert-Release ($irisText -match '(?m)^enableShaders=false\s*$' -and $irisText -match '(?m)^shaderPack=\s*$') 'shaders must be disabled with no shader selected by default'
+    Assert-Release ($irisText -match '(?m)^maxShadowRenderDistance=16\s*$') 'shader shadow render distance must be limited to 16 chunks'
 
     $coreEntries = @($pack.Entries | Where-Object {
         $_.FullName -like "overrides/mods/tensuranewworld-*.jar"
@@ -116,6 +117,7 @@ try {
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_CREDITS.md")) "credits are missing"
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_GRANDE_SABIO.md")) "Great Sage instructions are missing"
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_MENUS.md")) "menu guide is missing"
+    Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_0.3.4.md")) "0.3.4 stability notes are missing"
     $hudConfigEntry = $pack.GetEntry("overrides/config/tensura/client/hud_config.toml")
     Assert-Release ($null -ne $hudConfigEntry) "the single-progression HUD config is missing"
     $hudConfig = Read-ZipText $hudConfigEntry

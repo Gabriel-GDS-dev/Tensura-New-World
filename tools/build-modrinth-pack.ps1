@@ -82,6 +82,7 @@ Copy-Item -LiteralPath (Join-Path $root "docs\MENUS.md") -Destination (Join-Path
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.1.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.1.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.2.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.2.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.3.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.3.md")
+Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.4.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.4.md")
 Copy-Item -LiteralPath (Join-Path $root "overrides\config\tensura\client\hud_config.toml") `
     -Destination (Join-Path $stage "overrides\config\tensura\client\hud_config.toml")
 New-Item -ItemType Directory -Path (Join-Path $stage 'client-overrides/config') -Force | Out-Null

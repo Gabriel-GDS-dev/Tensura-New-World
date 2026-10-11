@@ -102,7 +102,7 @@ A partir de **0.3.1-alpha-full.1**, o pacote instala automaticamente:
 - **Iris 1.8.14-beta.1 e Sodium 0.8.13:** suporte a shaders e otimização gráfica no cliente.
 - **BSL 10.1.8, Complementary Unbound r5.9.3, Photon v1.3b e Solas 3.7b.**
 
-**Complementary Unbound vem ativado por padrão.** Escolha outro shader nas opções de vídeo; apenas um pode ficar ativo por vez. Não é necessário baixar esses arquivos manualmente. Iris, Sodium e shaders são exclusivos do cliente.
+**Para maior estabilidade, os shaders vêm desativados por padrão.** Os quatro pacotes estão incluídos e podem ser ativados nas opções de vídeo; apenas um shader fica ativo por vez. O uso de shaders pode aumentar bastante o consumo de memória gráfica. Não é necessário baixar esses arquivos manualmente. Iris, Sodium e shaders são exclusivos do cliente.
 
 ---
 
@@ -212,7 +212,7 @@ Evolve organically in the world through the Sage line without needing administra
 
 The full pack automatically installs **Great Sage 0.0.6.1**, **Morph 0.1.4**, **Iris 1.8.14-beta.1**, **Sodium 0.8.13**, **BSL 10.1.8**, **Complementary Unbound r5.9.3**, **Photon v1.3b** and **Solas 3.7b**.
 
-**Complementary Unbound is enabled by default.** Choose another shader in video settings; only one can be active at a time. No manual downloads are required for these files. Iris, Sodium and shaders are client-only.
+**For improved stability, shaders are disabled by default.** All four shader packs are included and can be enabled in video settings; only one shader can be active at a time. Shaders can significantly increase graphics-memory usage. No manual downloads are required. Iris, Sodium and shaders are client-only.
 
 ### Credits
 
