@@ -16,9 +16,9 @@
       ],
       "vmArgs": [
         "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main"
       ],
-      "cwd": "${workspaceFolder}\\build\\rpg-ui-client",
+      "cwd": "${workspaceFolder}\\run",
       "env": {},
       "console": "internalConsole",
       "shortenCommandLine": "none"
@@ -38,7 +38,7 @@
       ],
       "vmArgs": [
         "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -60,9 +60,9 @@
       ],
       "vmArgs": [
         "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main"
       ],
-      "cwd": "${workspaceFolder}\\build\\body-gametest-morph",
+      "cwd": "${workspaceFolder}\\build\\body-gametest-nw",
       "env": {},
       "console": "internalConsole",
       "shortenCommandLine": "none"
@@ -82,7 +82,7 @@
       ],
       "vmArgs": [
         "@C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main;tensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\gametest"
+        "-Dfml.modFolders\u003dtensuranewworld%%C:\\Users\\gabri\\OneDrive\\Documentos\\Tensura New World\\tensura-new-world-core\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
