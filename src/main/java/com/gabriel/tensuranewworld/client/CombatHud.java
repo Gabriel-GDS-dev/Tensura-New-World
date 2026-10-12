@@ -17,7 +17,7 @@ public final class CombatHud {
         if (mc.player == null || mc.player.isSpectator()) return;
         int width = Math.min(214, (g.guiWidth() - 30) / 2);
         if (width < 100) return;
-        boolean compact = g.guiHeight() < 240;
+        boolean compact = g.guiHeight() < 270;
         int cardHeight = compact ? 30 : 40;
         int x = 12, y = Math.max(82, g.guiHeight() - 3 * (cardHeight + 4) - 12);
         int preset = ReincarnatedSkillControls.activePreset();

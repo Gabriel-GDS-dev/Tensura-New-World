@@ -34,6 +34,14 @@ public final class BodyGameTests {
             var camera = com.gabriel.tensuranewworld.client.FormCamera.measure(player, 1);
             helper.assertTrue(camera.eyeHeight() > mob.getBbHeight() * 0.25F, "Camera at feet for " + id);
             helper.assertTrue(camera.eyeHeight() <= mob.getBbHeight(), "Camera above body for " + id);
+            for (float partialTick : new float[]{0, 0.5F, 1}) {
+                float eye = com.gabriel.tensuranewworld.client.FormCamera.measure(player, partialTick).eyeHeight();
+                var origin = player.getPosition(partialTick).add(0, eye, 0);
+                helper.assertTrue(player.getEyePosition(partialTick).distanceTo(origin) < .001,
+                        "Selection ray differs from camera for " + id + " at " + partialTick);
+            }
+            helper.assertTrue(Math.abs(player.getEyePosition().y - player.getY() - camera.eyeHeight()) < .001,
+                    "Server reach differs from camera for " + id);
         }
         clear(player, data);
         if (height != null) height.setBaseValue(1);

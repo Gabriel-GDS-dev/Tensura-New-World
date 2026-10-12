@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.gabriel.tensuranewworld.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["SageProgressMixin", "SkillUnlockListenerMixin", "MorphAccessMixin"],
+  "mixins": ["SageProgressMixin", "SkillUnlockListenerMixin", "MorphAccessMixin", "FormSelectionMixin"],
   "client": ["BattleSetMixin", "SageArchiveMixin", "FormCameraMixin", "RpgButtonMixin"],
   "injectors": {"defaultRequire": 1}
 }

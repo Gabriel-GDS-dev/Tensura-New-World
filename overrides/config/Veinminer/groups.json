@@ -1,0 +1,7 @@
+[
+  {
+    "name": "Minerios New World",
+    "blocks": ["#c:ores", "#tensura:ores"],
+    "tools": ["#minecraft:pickaxes"]
+  }
+]

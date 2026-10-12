@@ -56,6 +56,7 @@ $requiredCoreEntries = @(
     "com/gabriel/tensuranewworld/gameplay/BodyRules.class",
     "com/gabriel/tensuranewworld/integration/MorphBridge.class",
     "com/gabriel/tensuranewworld/client/SurvivalHud.class",
+    "com/gabriel/tensuranewworld/client/BlockInspectionHud.class",
     "com/gabriel/tensuranewworld/client/FormCamera.class",
     "com/gabriel/tensuranewworld/client/RpgTheme.class",
     "com/gabriel/tensuranewworld/client/MenuGuide.class",
@@ -105,6 +106,12 @@ try {
         Assert-Release ($actual[0].hashes.sha1 -eq $expected.hashes.sha1 -and $actual[0].hashes.sha512 -eq $expected.hashes.sha512 -and $actual[0].downloads[0] -eq $expected.downloads[0] -and $actual[0].fileSize -eq $expected.fileSize) "extra content differs from pinned Modrinth file $($expected.path)"
     }
     $irisConfig = $pack.GetEntry('client-overrides/config/iris.properties')
+    $veinSettingsEntry = $pack.GetEntry('overrides/config/Veinminer/settings.json')
+    Assert-Release ($null -ne $veinSettingsEntry) 'VeinMiner settings missing'
+    $veinSettings = (Read-ZipText $veinSettingsEntry) | ConvertFrom-Json
+    Assert-Release ($veinSettings.mustSneak -and $veinSettings.needCorrectTool -and $veinSettings.decreaseDurability -and $veinSettings.maxChain -eq 32 -and -not $veinSettings.client.allBlocks) 'VeinMiner mining limits are incorrect'
+    $veinGroups = (Read-ZipText $pack.GetEntry('overrides/config/Veinminer/groups.json')) | ConvertFrom-Json
+    Assert-Release (@($veinGroups).Count -eq 1 -and $veinGroups[0].blocks -contains '#c:ores' -and $veinGroups[0].blocks -contains '#tensura:ores' -and $veinGroups[0].tools -contains '#minecraft:pickaxes') 'VeinMiner ore group missing'
     Assert-Release ($null -ne $irisConfig) 'default shader config missing'
     $irisText = Read-ZipText $irisConfig
     Assert-Release ($irisText -match '(?m)^enableShaders=false\s*$' -and $irisText -match '(?m)^shaderPack=\s*$') 'shaders must be disabled with no shader selected by default'

@@ -20,7 +20,7 @@ public final class ClientModEvents {
         event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TensuraNewWorld.MOD_ID, "survival"),
                 (graphics, delta) -> {
                     var mc = net.minecraft.client.Minecraft.getInstance();
-                    if (mc.player != null && !mc.options.hideGui && mc.screen == null) { SurvivalHud.render(graphics); CombatHud.render(graphics); }
+                    if (mc.player != null && !mc.options.hideGui && mc.screen == null) { SurvivalHud.render(graphics); CombatHud.render(graphics); BlockInspectionHud.render(graphics); }
                 });
     }
 }
