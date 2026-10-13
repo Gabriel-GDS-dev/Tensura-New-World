@@ -1,0 +1,2 @@
+version:3955
+key_key.veinminer_client.hold:key.keyboard.left.shift

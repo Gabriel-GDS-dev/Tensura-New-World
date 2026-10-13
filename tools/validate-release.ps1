@@ -57,7 +57,6 @@ $requiredCoreEntries = @(
     "com/gabriel/tensuranewworld/integration/MorphBridge.class",
     "com/gabriel/tensuranewworld/client/SurvivalHud.class",
     "com/gabriel/tensuranewworld/client/BlockInspectionHud.class",
-    "com/gabriel/tensuranewworld/mixin/VeinminerKeybindMixin.class",
     "com/gabriel/tensuranewworld/client/FormCamera.class",
     "com/gabriel/tensuranewworld/client/RpgTheme.class",
     "com/gabriel/tensuranewworld/client/MenuGuide.class",
@@ -107,6 +106,11 @@ try {
         Assert-Release ($actual[0].hashes.sha1 -eq $expected.hashes.sha1 -and $actual[0].hashes.sha512 -eq $expected.hashes.sha512 -and $actual[0].downloads[0] -eq $expected.downloads[0] -and $actual[0].fileSize -eq $expected.fileSize) "extra content differs from pinned Modrinth file $($expected.path)"
     }
     $irisConfig = $pack.GetEntry('client-overrides/config/iris.properties')
+    $clientOptionsEntry = $pack.GetEntry('client-overrides/options.txt')
+    Assert-Release ($null -ne $clientOptionsEntry) 'client keybind defaults are missing'
+    $clientOptions = Read-ZipText $clientOptionsEntry
+    Assert-Release ($clientOptions -match '(?m)^version:3955\s*$') 'client options format version must match Minecraft 1.21.1'
+    Assert-Release ($clientOptions -match '(?m)^key_key\.veinminer_client\.hold:key\.keyboard\.left\.shift\s*$') 'VeinMiner hold key must default to left Shift'
     $veinSettingsEntry = $pack.GetEntry('overrides/config/Veinminer/settings.json')
     Assert-Release ($null -ne $veinSettingsEntry) 'VeinMiner settings missing'
     $veinSettings = (Read-ZipText $veinSettingsEntry) | ConvertFrom-Json
@@ -129,6 +133,7 @@ try {
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_MENUS.md")) "menu guide is missing"
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_0.3.4.md")) "0.3.4 stability notes are missing"
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_0.3.7.md")) "0.3.7 release notes are missing"
+    Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_0.3.8.md")) "0.3.8 release notes are missing"
     $hudConfigEntry = $pack.GetEntry("overrides/config/tensura/client/hud_config.toml")
     Assert-Release ($null -ne $hudConfigEntry) "the single-progression HUD config is missing"
     $hudConfig = Read-ZipText $hudConfigEntry
@@ -154,6 +159,7 @@ try {
         foreach ($entryName in $requiredCoreEntries) {
             Assert-Release ($null -ne $coreJar.GetEntry($entryName)) "core JAR is missing $entryName"
         }
+        Assert-Release ($null -eq $coreJar.GetEntry("com/gabriel/tensuranewworld/mixin/VeinminerKeybindMixin.class")) "the obsolete VeinMiner keybind mixin must not be shipped"
         Assert-Release ($null -eq $coreJar.GetEntry("com/gabriel/tensuranewworld/gameplay/BodyGameTests.class")) "GameTests must not be shipped in the core"
         $metadata = Read-ZipText $coreJar.GetEntry("META-INF/neoforge.mods.toml")
         Assert-Release ($metadata.Contains($version)) "core metadata does not contain version $version"

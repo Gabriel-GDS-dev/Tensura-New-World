@@ -86,6 +86,7 @@ Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.4.md") -Destination (J
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.5.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.5.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.6.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.6.md")
 Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.7.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.7.md")
+Copy-Item -LiteralPath (Join-Path $root "docs\RELEASE_0.3.8.md") -Destination (Join-Path $stage "overrides\TENSURA_NEW_WORLD_0.3.8.md")
 New-Item -ItemType Directory -Path (Join-Path $stage 'overrides/config/Veinminer') -Force | Out-Null
 Get-ChildItem -LiteralPath (Join-Path $root 'overrides/config/Veinminer') -File | ForEach-Object {
     Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $stage 'overrides/config/Veinminer')
@@ -94,6 +95,7 @@ Copy-Item -LiteralPath (Join-Path $root "overrides\config\tensura\client\hud_con
     -Destination (Join-Path $stage "overrides\config\tensura\client\hud_config.toml")
 New-Item -ItemType Directory -Path (Join-Path $stage 'client-overrides/config') -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $root 'overrides/config/iris.properties') -Destination (Join-Path $stage 'client-overrides/config/iris.properties')
+Copy-Item -LiteralPath (Join-Path $root 'overrides/client-overrides/options.txt') -Destination (Join-Path $stage 'client-overrides/options.txt')
 
 $index = [ordered]@{
     formatVersion = 1

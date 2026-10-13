@@ -49,7 +49,7 @@ Inclua estes dados na pagina:
 - Predator/Stomach nativo continua sob controle do Reincarnated. A aba Estomago do New World mostra somente registros proprios e nao deposita, retira ou sincroniza itens.
 - Naming, subordinados, nacoes, Predator/Stomach, Great Sage opcional e Harvest Festival.
 - Tecla `R` para Raphael, `G` para Great Sage e `V` para analise quando o addon estiver instalado.
-- O atalho "Veinmining (Hold)" inicia no Shift esquerdo; altere em **Opcoes > Controles > Veinminer**. O addon de atalho e instalado apenas no cliente.
+- O atalho "Veinmining (Hold)" inicia no Shift esquerdo; altere em **Opcoes > Controles > Veinminer**. O padrao do cliente e fornecido por `client-overrides/options.txt`; o addon de atalho e instalado apenas no cliente.
 - Creditos e links de `CREDITS.md`.
 - Aviso de projeto de fa nao oficial.
 
