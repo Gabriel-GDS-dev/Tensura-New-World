@@ -36,9 +36,18 @@ public final class BlockInspectionHud {
         text(graphics, harvest ? "Ferramenta adequada" : "Requer ferramenta melhor", x + 8, y + 48,
                 width - 16, harvest ? 0xFF91CF9A : 0xFFEB9898);
         if (ore && ModList.get().isLoaded("veinminer")) {
-            String sneak = mc.options.keyShift.getTranslatedKeyMessage().getString();
-            text(graphics, "VeinMiner: segure " + sneak + " + mine", x + 8, y + 62, width - 16, RpgTheme.GOLD);
+            String hotkey = veinminerHotkey(mc);
+            text(graphics, "VeinMiner: segure " + hotkey + " + mine", x + 8, y + 62, width - 16, RpgTheme.GOLD);
         }
+    }
+
+    private static String veinminerHotkey(Minecraft minecraft) {
+        for (var mapping : minecraft.options.keyMappings) {
+            if ("key.veinminer_client.hold".equals(mapping.getName())) {
+                return mapping.getTranslatedKeyMessage().getString();
+            }
+        }
+        return "atalho configurado";
     }
 
     private static void text(GuiGraphics graphics, String text, int x, int y, int width, int color) {

@@ -49,6 +49,7 @@ Inclua estes dados na pagina:
 - Predator/Stomach nativo continua sob controle do Reincarnated. A aba Estomago do New World mostra somente registros proprios e nao deposita, retira ou sincroniza itens.
 - Naming, subordinados, nacoes, Predator/Stomach, Great Sage opcional e Harvest Festival.
 - Tecla `R` para Raphael, `G` para Great Sage e `V` para analise quando o addon estiver instalado.
+- O atalho "Veinmining (Hold)" inicia no Shift esquerdo; altere em **Opcoes > Controles > Veinminer**. O addon de atalho e instalado apenas no cliente.
 - Creditos e links de `CREDITS.md`.
 - Aviso de projeto de fa nao oficial.
 
@@ -104,7 +105,7 @@ O pacote inclui apenas um guia de instalacao. As outras seis dependencias sao ba
 ## 7. Atualizacoes futuras
 
 1. Altere `mod_version` em `gradle.properties`.
-2. Atualize a versao nos scripts de build e validacao.
+2. Atualize o changelog da versao e o arquivo de release copiado pelo gerador do pacote.
 3. Execute testes, build, geracao e validacao do `.mrpack`.
 4. Publique uma nova versao com changelog; nunca substitua silenciosamente um arquivo ja publicado.
 

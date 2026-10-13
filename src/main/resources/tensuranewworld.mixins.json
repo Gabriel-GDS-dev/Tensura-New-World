@@ -4,6 +4,6 @@
   "package": "com.gabriel.tensuranewworld.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": ["SageProgressMixin", "SkillUnlockListenerMixin", "MorphAccessMixin", "FormSelectionMixin"],
-  "client": ["BattleSetMixin", "SageArchiveMixin", "FormCameraMixin", "RpgButtonMixin"],
+  "client": ["BattleSetMixin", "SageArchiveMixin", "FormCameraMixin", "RpgButtonMixin", "VeinminerKeybindMixin"],
   "injectors": {"defaultRequire": 1}
 }

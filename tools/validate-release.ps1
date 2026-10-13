@@ -57,6 +57,7 @@ $requiredCoreEntries = @(
     "com/gabriel/tensuranewworld/integration/MorphBridge.class",
     "com/gabriel/tensuranewworld/client/SurvivalHud.class",
     "com/gabriel/tensuranewworld/client/BlockInspectionHud.class",
+    "com/gabriel/tensuranewworld/mixin/VeinminerKeybindMixin.class",
     "com/gabriel/tensuranewworld/client/FormCamera.class",
     "com/gabriel/tensuranewworld/client/RpgTheme.class",
     "com/gabriel/tensuranewworld/client/MenuGuide.class",
@@ -93,7 +94,7 @@ try {
         Assert-Release ($expectedDownloads -contains $name) "unexpected dependency $name"
         $expectedPath = if ($name.EndsWith('.zip')) { "shaderpacks/$name" } else { "mods/$name" }
         Assert-Release ($file.path -eq $expectedPath) "invalid dependency path for $name"
-        $expectedServer = if ($name.EndsWith('.zip') -or $name -match '^(iris-|sodium-)') { 'unsupported' } else { 'required' }
+        $expectedServer = if ($name.EndsWith('.zip') -or $name -match '^(iris-|sodium-|veinminer-client-)') { 'unsupported' } else { 'required' }
         Assert-Release ($file.env.client -eq 'required' -and $file.env.server -eq $expectedServer) "invalid environment for $name"
         Assert-Release (-not [string]::IsNullOrWhiteSpace($file.hashes.sha1)) "missing SHA-1 for $name"
         Assert-Release (-not [string]::IsNullOrWhiteSpace($file.hashes.sha512)) "missing SHA-512 for $name"
@@ -109,9 +110,11 @@ try {
     $veinSettingsEntry = $pack.GetEntry('overrides/config/Veinminer/settings.json')
     Assert-Release ($null -ne $veinSettingsEntry) 'VeinMiner settings missing'
     $veinSettings = (Read-ZipText $veinSettingsEntry) | ConvertFrom-Json
-    Assert-Release ($veinSettings.mustSneak -and $veinSettings.needCorrectTool -and $veinSettings.decreaseDurability -and $veinSettings.maxChain -eq 32 -and -not $veinSettings.client.allBlocks) 'VeinMiner mining limits are incorrect'
+    Assert-Release (-not $veinSettings.mustSneak -and $veinSettings.needCorrectTool -and $veinSettings.decreaseDurability -and $veinSettings.maxChain -eq 32 -and $veinSettings.client.allow -and $veinSettings.client.require -and -not $veinSettings.client.allBlocks) 'VeinMiner mining limits or hotkey settings are incorrect'
     $veinGroups = (Read-ZipText $pack.GetEntry('overrides/config/Veinminer/groups.json')) | ConvertFrom-Json
     Assert-Release (@($veinGroups).Count -eq 1 -and $veinGroups[0].blocks -contains '#c:ores' -and $veinGroups[0].blocks -contains '#tensura:ores' -and $veinGroups[0].tools -contains '#minecraft:pickaxes') 'VeinMiner ore group missing'
+    $veinminerHotkey = @($index.files | Where-Object { $_.path -eq 'mods/veinminer-client-neoforge-2.11.2+1.21.1.jar' })
+    Assert-Release ($veinminerHotkey.Count -eq 1 -and $veinminerHotkey[0].env.client -eq 'required' -and $veinminerHotkey[0].env.server -eq 'unsupported') 'VeinMiner Hotkey must be installed on clients only'
     Assert-Release ($null -ne $irisConfig) 'default shader config missing'
     $irisText = Read-ZipText $irisConfig
     Assert-Release ($irisText -match '(?m)^enableShaders=false\s*$' -and $irisText -match '(?m)^shaderPack=\s*$') 'shaders must be disabled with no shader selected by default'
@@ -125,6 +128,7 @@ try {
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_GRANDE_SABIO.md")) "Great Sage instructions are missing"
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_MENUS.md")) "menu guide is missing"
     Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_0.3.4.md")) "0.3.4 stability notes are missing"
+    Assert-Release ($null -ne $pack.GetEntry("overrides/TENSURA_NEW_WORLD_0.3.7.md")) "0.3.7 release notes are missing"
     $hudConfigEntry = $pack.GetEntry("overrides/config/tensura/client/hud_config.toml")
     Assert-Release ($null -ne $hudConfigEntry) "the single-progression HUD config is missing"
     $hudConfig = Read-ZipText $hudConfigEntry
